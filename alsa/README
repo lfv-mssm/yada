@@ -1,0 +1,12 @@
+
+ALSA software sound mixing on linux
+
+This folder contains a fix that makes it possible to run the system 
+under Linux without a soundcard that supports hardware mixing. This 
+fix is needed due to a bug in the java sound routines that opens and 
+allocates a hardware sound output device directly.
+The solution is very simple:
+
+1. Copy the file asoundrc to your home directory and rename it to .asoundrc.
+   Requires alsa version 1.0.14 or later.
+

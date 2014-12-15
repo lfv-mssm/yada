@@ -1,0 +1,16 @@
+Source: rxtx
+Section: libs
+Priority: optional
+Maintainer: Mario Joussen <joussen@debian.org>
+Build-Depends: debhelper (>> 5.0.0), libtool, kaffe-dev | java-compiler
+Standards-Version: 3.7.2.2
+
+Package: librxtx-java
+Architecture: any
+Depends: ${shlibs:Depends}, kaffe | java-virtual-machine
+Provides: lib-rxtx-java
+Conflicts: lib-rxtx-java
+Description: Full Java CommAPI implementation
+ RXTX is a full implementation of the Java CommAPI from Sun. It contains
+ native libraries providing serial and parallel communication for the
+ Java Development Toolkit (jdk 1.[1-4].*).

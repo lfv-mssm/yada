@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+  Autolocate example. Each player is liked to one 
+  terminal but neither terminal id nor group id is
+  defined in this exercise file. The players will
+  be located on available terminals automatically 
+  and asked for which group to belong to.
+-->
+<Exercise>
+
+    <TerminalLink>
+        <PlayerRef id="1"/>
+    </TerminalLink>
+
+    <TerminalLink>
+        <PlayerRef id="2"/>
+    </TerminalLink>
+
+    <TerminalLink>
+        <PlayerRef id="3"/>
+    </TerminalLink>
+
+</Exercise>

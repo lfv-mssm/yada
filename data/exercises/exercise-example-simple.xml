@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+  Simple exercise. Each of the players defined in the 
+  simple configuration is linked to one terminal and
+  belongs to group 1.
+-->
+<Exercise>
+
+    <TerminalLink terminalid="1" groupid="1">
+        <PlayerRef id="1"/>
+    </TerminalLink>
+
+    <TerminalLink terminalid="2" groupid="1">
+        <PlayerRef id="2"/>
+    </TerminalLink>
+
+    <TerminalLink terminalid="3" groupid="1">
+        <PlayerRef id="3"/>
+    </TerminalLink>
+
+</Exercise>

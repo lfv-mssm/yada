@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+  Simple configuration. Three terminals, one group, two 
+  channels, three roles and three players. All players
+  have access to both channels. Each player is allowed to
+  call the two other and each player plays only one role.
+-->
+
+<Configuration codec="jspeex:7">
+
+    <TerminalDefs>
+        <Terminal id="1" x="0" y="0">
+            <Name>T1</Name>
+        </Terminal>
+        <Terminal id="2" x="150" y="0">
+            <Name>T2</Name>
+        </Terminal>
+        <Terminal id="3" x="300" y="0">
+            <Name>T3</Name>
+        </Terminal>
+    </TerminalDefs>
+
+    <GroupDefs>
+        <Group id="1">
+            <Name>G1</Name>
+            <Color>#BBBBFF</Color>
+        </Group>
+        <Group id="2">
+            <Name>G1</Name>
+            <Color>#FFBBFF</Color>
+        </Group>
+        <Group id="3">
+            <Name>G1</Name>
+            <Color>#BBBBFF</Color>
+        </Group>
+        <Group id="4">
+            <Name>G1</Name>
+            <Color>#FFBBFF</Color>
+        </Group>
+        <Group id="5">
+            <Name>G1</Name>
+            <Color>#BBBBFF</Color>
+        </Group>
+        <Group id="6">
+            <Name>G1</Name>
+            <Color>#FFBBFF</Color>
+        </Group>
+    </GroupDefs>
+
+    <ChannelDefs>
+        <Channel id="1" recordable="true" state="rxtx">
+            <Name>C1</Name>
+        </Channel>
+        <Channel id="2">
+            <Name>C2</Name>
+        </Channel>
+    </ChannelDefs>
+
+    <RoleDefs>
+        <Role id="1">
+            <Name>R1</Name>
+            <PhoneSetup>
+                <RoleRef id="2"/>
+                <RoleRef id="3"/>
+            </PhoneSetup>
+        </Role>     
+        <Role id="2">
+            <Name>R2</Name>
+            <PhoneSetup>
+                <RoleRef id="1"/>
+                <RoleRef id="3"/>
+            </PhoneSetup>
+        </Role>     
+        <Role id="3">
+            <Name>R3</Name>
+            <PhoneSetup>
+                <RoleRef id="1"/>
+                <RoleRef id="2"/>
+            </PhoneSetup>
+        </Role>     
+    </RoleDefs>
+
+    <PlayerDefs>
+        <Player id="1">
+            <Name>P1</Name>
+            <ChannelSetup>
+                <ChannelRef id="1"/>
+                <ChannelRef id="2"/>
+            </ChannelSetup>
+            <RoleSetup>
+                <RoleRef id="1"/>
+            </RoleSetup>
+        </Player>
+        <Player id="2">
+            <Name>P2</Name>
+            <ChannelSetup>
+                <ChannelRef id="1"/>
+                <ChannelRef id="2"/>
+            </ChannelSetup>
+            <RoleSetup>
+                <RoleRef id="2"/>
+            </RoleSetup>
+        </Player>
+        <Player id="3">
+            <Name>P3</Name>
+            <ChannelSetup>
+                <ChannelRef id="1"/>
+                <ChannelRef id="2"/>
+            </ChannelSetup>
+            <RoleSetup>
+                <RoleRef id="3"/>
+            </RoleSetup>
+        </Player>
+    </PlayerDefs>
+
+</Configuration>

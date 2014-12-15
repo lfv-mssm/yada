@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Terminal>
+  <Group>EPN2</Group>
+  <Codec>jspeex:7</Codec>
+  <ChannelSetup>
+    <Channel id="513" state="off" locked="false" recordable="false" hidden="true">
+      <Name>124.150 H</Name>
+    </Channel>
+    <Channel id="514" state="off" locked="false" recordable="false" hidden="false">
+      <Name>126.750</Name>
+    </Channel>
+    <Channel id="515" state="rx" locked="true" recordable="false" hidden="false">
+      <Name>131.100</Name>
+    </Channel>
+    <Channel id="777" state="rxtx" locked="false" recordable="false" hidden="false">
+      <Name>Supervisor</Name>
+    </Channel>
+  </ChannelSetup>
+  <RoleSetup>
+    <Role id="514">
+      <Name>TE</Name>
+      <PhonePeers>
+        <RoleRef id="769">
+          <Name>Supervisor</Name>
+        </RoleRef>
+        <RoleRef id="0">
+          <Name>empty_slot</Name>
+        </RoleRef>
+        <RoleRef id="515">
+          <Name>TV</Name>
+        </RoleRef>
+        <RoleRef id="516">
+          <Name>DIR1</Name>
+        </RoleRef>
+        <RoleRef id="517">
+          <Name>DIR2</Name>
+        </RoleRef>
+      </PhonePeers>
+    </Role>
+    <Role id="0">
+      <Name>empty_slot</Name>
+      <PhonePeers />
+    </Role>
+    <Role id="515">
+      <Name>TV</Name>
+      <PhonePeers>
+        <RoleRef id="0">
+          <Name>empty_slot</Name>
+        </RoleRef>
+        <RoleRef id="769">
+          <Name>Supervisor</Name>
+        </RoleRef>
+        <RoleRef id="514">
+          <Name>TE</Name>
+        </RoleRef>
+        <RoleRef id="516">
+          <Name>DIR1</Name>
+        </RoleRef>
+        <RoleRef id="517">
+          <Name>DIR2</Name>
+        </RoleRef>
+      </PhonePeers>
+    </Role>
+  </RoleSetup>
+  <RoleDefs>
+    <Role id="1">
+      <Name>Supervisor</Name>
+    </Role>	
+    <Role id="2">
+      <Name>TE</Name>
+    </Role>	
+    <Role id="3">
+      <Name>TV</Name>
+    </Role>	
+    <Role id="4">
+      <Name>DIR1</Name>
+    </Role>	
+    <Role id="5">
+      <Name>DIR2</Name>
+    </Role>	
+  </RoleDefs>
+</Terminal>
+

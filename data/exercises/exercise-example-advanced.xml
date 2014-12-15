@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+  Advanced exercise. Odd roles in group 1 are played
+  on terminal 1, even roles in group 1 are played
+  on terminal 2, all roles in group 2 are played on
+  terminal 3 and supervisor gets terminal 4.
+-->
+<Exercise>
+
+    <TerminalLink terminalid="1" groupid="1">
+        <PlayerRef id="5"/>
+    </TerminalLink>
+
+    <TerminalLink terminalid="2" groupid="1">
+        <PlayerRef id="6"/>
+    </TerminalLink>
+
+    <TerminalLink terminalid="3" groupid="2">
+        <PlayerRef id="1"/>
+        <PlayerRef id="2"/>
+        <PlayerRef id="3"/>
+        <PlayerRef id="4"/>
+    </TerminalLink>
+
+    <TerminalLink terminalid="4" groupid="3">
+        <PlayerRef id="7"/>
+    </TerminalLink>
+
+</Exercise>

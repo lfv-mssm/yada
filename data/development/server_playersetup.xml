@@ -1,0 +1,126 @@
+<PlayerSetup>
+  <Player terminalid="9" groupid="3">
+    <Name>Supervisor</Name>
+    <ChannelSetup>
+      <ChannelRef id="1" groupid="1" showgroup="true" recordable="true" hidden="false" />
+      <ChannelRef id="2" groupid="1" showgroup="true" recordable="true" />
+      <ChannelRef id="3" groupid="1" showgroup="true" recordable="true" />
+      <ChannelRef id="1" groupid="2" showgroup="true" recordable="true" hidden="false" />
+      <ChannelRef id="2" groupid="2" showgroup="true" recordable="true" />
+      <ChannelRef id="3" groupid="2" showgroup="true" recordable="true" />
+      <ChannelRef id="9" locked="false" showgroup="true" recordable="true" />
+    </ChannelSetup>
+    <RoleSetup>
+      <RoleRef id="1" uid="769" />
+    </RoleSetup>
+    <PlayerIds>
+      <PlayerRef id="1" />
+    </PlayerIds>
+  </Player>
+  <Player terminalid="1" groupid="1">
+    <Name>TE</Name>
+    <ChannelSetup>
+      <ChannelRef id="1" />
+      <ChannelRef id="2" />
+      <ChannelRef id="9" />
+    </ChannelSetup>
+    <RoleSetup>
+      <RoleRef id="2" uid="258" />
+    </RoleSetup>
+    <PlayerIds>
+      <PlayerRef id="2" />
+    </PlayerIds>
+  </Player>
+  <Player terminalid="2" groupid="1">
+    <Name>TV</Name>
+    <ChannelSetup>
+      <ChannelRef id="1" />
+      <ChannelRef id="2" />
+      <ChannelRef id="3" />
+      <ChannelRef id="9" />
+    </ChannelSetup>
+    <RoleSetup>
+      <RoleRef id="3" uid="259" />
+    </RoleSetup>
+    <PlayerIds>
+      <PlayerRef id="3" />
+    </PlayerIds>
+  </Player>
+  <Player terminalid="5" groupid="1">
+    <Name>DIR1</Name>
+    <ChannelSetup>
+      <ChannelRef id="1" />
+      <ChannelRef id="2" />
+      <ChannelRef id="3" />
+      <ChannelRef id="9" />
+    </ChannelSetup>
+    <RoleSetup>
+      <RoleRef id="4" uid="260" />
+    </RoleSetup>
+    <PlayerIds>
+      <PlayerRef id="5" />
+    </PlayerIds>
+  </Player>
+  <Player terminalid="6" groupid="1">
+    <Name>DIR2</Name>
+    <ChannelSetup>
+      <ChannelRef id="1" />
+      <ChannelRef id="2" />
+      <ChannelRef id="3" />
+      <ChannelRef id="9" />
+    </ChannelSetup>
+    <RoleSetup>
+      <RoleRef id="5" uid="261" />
+    </RoleSetup>
+    <PlayerIds>
+      <PlayerRef id="6" />
+    </PlayerIds>
+  </Player>
+  <Player terminalid="3" groupid="2">
+    <Name>TE-TV</Name>
+    <ChannelSetup>
+      <ChannelRef id="1" />
+      <ChannelRef id="2" />
+      <ChannelRef id="3" />
+      <ChannelRef id="9" />
+    </ChannelSetup>
+    <RoleSetup>
+      <RoleRef id="2" uid="514" />
+      <RoleRef />
+      <RoleRef id="3" uid="515" />
+    </RoleSetup>
+    <PlayerIds>
+      <PlayerRef id="4" />
+    </PlayerIds>
+  </Player>
+  <Player terminalid="7" groupid="2">
+    <Name>DIR1</Name>
+    <ChannelSetup>
+      <ChannelRef id="1" />
+      <ChannelRef id="2" />
+      <ChannelRef id="3" />
+      <ChannelRef id="9" />
+    </ChannelSetup>
+    <RoleSetup>
+      <RoleRef id="4" uid="516" />
+    </RoleSetup>
+    <PlayerIds>
+      <PlayerRef id="5" />
+    </PlayerIds>
+  </Player>
+  <Player terminalid="8" groupid="2">
+    <Name>DIR2</Name>
+    <ChannelSetup>
+      <ChannelRef id="1" />
+      <ChannelRef id="2" />
+      <ChannelRef id="3" />
+      <ChannelRef id="9" />
+    </ChannelSetup>
+    <RoleSetup>
+      <RoleRef id="5" uid="517" />
+    </RoleSetup>
+    <PlayerIds>
+      <PlayerRef id="6" />
+    </PlayerIds>
+  </Player>
+</PlayerSetup>

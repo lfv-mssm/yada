@@ -1,0 +1,5 @@
+This linux footswich driver is based on the open source ftdi library and thus works with newer 
+kernels (without support for /proc/bus/usb/). Under ubuntu the opensorce libftdi can be install 
+from the standard repository by running "aptitude install libftdi1". To build this souce code 
+the development versions is needed "aptitude install libftdi-dev".
+

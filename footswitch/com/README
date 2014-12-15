@@ -1,0 +1,11 @@
+
+Native serial library for using the footswitch in COM-port mode
+
+See INSTALL for installation instructions (Written by Trent Jarvi, author of the rxtx library)
+
+
+Linux/Solaris:
+
+The user running the yada client must be a member of the group "uucp" to be able 
+to write a lock file to the /var/lock directory and a member of the group "tty" 
+to have access to the serial port.

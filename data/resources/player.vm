@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Terminal>
+	<Name>$TerminalName</Name>
+	<Group>$Group</Group>
+	<Codec>$Codec</Codec>
+	<ChannelSetup>
+	#foreach ( $Channel in $ChannelList )
+		<Channel id="$Channel.Id" state="$Channel.State" locked="$Channel.Locked" recordable="$Channel.Recordable" hidden="$Channel.Hidden" monitor="$Channel.Monitor">
+			<Name>$Channel.Name</Name>
+		</Channel>
+	#end
+	</ChannelSetup>
+	<RoleSetup>
+	#foreach ( $Role in $RoleList )
+		<Role id="$Role.Id">
+			<Name>$Role.Name</Name>
+			<PhonePeers>
+			#foreach ( $Peer in $Role.PeerList )
+				<RoleRef id="$Peer.Id">
+					<Name>$Peer.Name</Name>
+				</RoleRef>
+			#end
+			</PhonePeers>
+		</Role>
+	#end
+	</RoleSetup>
+	<RoleDefs>
+	#foreach ( $Role in $RoleDefsList )
+		<Role id="$Role.Id">
+			<Name>$Role.Name</Name>
+		</Role>
+	#end
+	</RoleDefs>
+</Terminal>

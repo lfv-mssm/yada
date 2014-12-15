@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<Configuration codec="null">
+
+    <TerminalDefs>
+        <Terminal id="1" x="0" y="0">
+            <Name>T1</Name>
+        </Terminal>
+        <Terminal id="2" x="180" y="0">
+            <Name>T2</Name>
+        </Terminal>
+        <Terminal id="3" x="0" y="150">
+            <Name>T3</Name>
+        </Terminal>
+        <Terminal id="4" x="180" y="150">
+            <Name>T4</Name>
+        </Terminal>
+        <Terminal id="3456" x="0" y="300">
+            <Name>TBIG</Name>
+        </Terminal>
+    </TerminalDefs>
+
+    <GroupDefs>
+        <Group id="1">
+            <Name>G1</Name>
+            <Color>#BBBBFF</Color>
+        </Group>
+        <Group id="2">
+            <Name>G2</Name>
+            <Color>#BBFFBB</Color>
+        </Group>
+        <Group id="3">
+            <Name>GCOM</Name>
+            <Color>#FFBBBB</Color>
+        </Group>
+        <Group id="3987">
+            <Name>GBIG</Name>
+            <Color>#BBBBBB</Color>
+        </Group>
+    </GroupDefs>
+    
+    <ChannelDefs>
+        <Channel id="1">
+            <Name>CGRP</Name>
+        </Channel>
+        <Channel id="10">
+            <Name>121.5</Name>
+        </Channel>
+        <Channel id="11">
+            <Name>134.8</Name>
+        </Channel>
+        <Channel id="12">
+            <Name>CGRP</Name>
+        </Channel>
+        <Channel id="13">
+            <Name>CGRP</Name>
+        </Channel>
+        <Channel id="14">
+            <Name>CGRP</Name>
+        </Channel>
+        <Channel id="2" groupid="3" state="rx" hidden="true">
+            <Name>CPA</Name>
+        </Channel>
+        <Channel id="3" groupid="3" state="rxtx">
+            <Name>CCOM</Name>
+        </Channel>
+        <Channel id="4" state="off" locked="true">
+            <Name>CMON</Name>
+        </Channel>
+        <Channel id="3567">
+            <Name>CBIG</Name>
+        </Channel>
+    </ChannelDefs>
+
+    <RoleDefs>
+        <Role id="1">
+            <Name>R1</Name>
+            <PhoneSetup>
+                <RoleRef id="5"/>
+                <RoleRef id="2"/>
+                <RoleRef id="3"/>
+                <RoleRef id="4"/>
+            </PhoneSetup>
+        </Role>
+        <Role id="2">
+            <Name>R2</Name>
+            <PhoneSetup>
+                <RoleRef id="5"/>
+                <RoleRef id="1"/>
+                <RoleRef id="3"/>
+                <RoleRef id="4"/>
+            </PhoneSetup>
+        </Role>
+        <Role id="3">
+            <Name>R3</Name>
+            <PhoneSetup>
+                <RoleRef id="5"/>
+                <RoleRef id="1"/>
+                <RoleRef id="2"/>
+                <RoleRef id="4"/>
+            </PhoneSetup>
+        </Role>
+        <Role id="4">
+            <Name>R4</Name>
+            <PhoneSetup>
+                <RoleRef/><RoleRef/><RoleRef id="5"/>
+                <RoleRef/><RoleRef/><RoleRef/>
+                <RoleRef id="1"/>
+                <RoleRef id="2"/>
+                <RoleRef id="3"/>
+            </PhoneSetup>
+        </Role>
+        <Role id="5" groupid="3">
+            <Name>RSUP</Name>
+            <PhoneSetup>
+                <RoleRef id="1" groupid="1" showgroup="true"/>
+                <RoleRef id="2" groupid="1" showgroup="true"/>
+                <RoleRef id="3" groupid="1" showgroup="true"/>
+                <RoleRef id="4" groupid="1" showgroup="true"/>
+                <RoleRef/><RoleRef/>
+                <RoleRef id="1" groupid="2" showgroup="true"/>
+                <RoleRef id="2" groupid="2" showgroup="true"/>
+                <RoleRef id="3" groupid="2" showgroup="true"/>
+                <RoleRef id="4" groupid="2" showgroup="true"/>
+            </PhoneSetup>
+        </Role>
+        <Role id="2345">
+            <Name>RBIG</Name>
+            <PhoneSetup>
+                <RoleRef id="1"/>
+                <RoleRef id="2"/>
+			</PhoneSetup>
+        </Role>
+    </RoleDefs>
+
+    <PlayerDefs>
+        <Player id="1">
+            <Name>P1</Name>
+            <ChannelSetup>
+                <ChannelRef id="10"/>
+            </ChannelSetup>
+            <RoleSetup>
+                <RoleRef id="1"/>
+            </RoleSetup>
+        </Player>
+        <Player id="2">
+            <Name>P2</Name>
+            <ChannelSetup>
+                <ChannelRef id="11"/>
+            </ChannelSetup>
+            <RoleSetup>
+                <RoleRef id="2"/>
+            </RoleSetup>
+        </Player>
+        <Player id="3">
+            <Name>P3</Name>
+            <ChannelSetup>
+                <ChannelRef id="1"/>
+                <ChannelRef id="2"/>
+                <ChannelRef id="3"/>
+            </ChannelSetup>
+            <RoleSetup>
+                <RoleRef id="3"/>
+            </RoleSetup>
+        </Player>
+        <Player id="4">
+            <Name>P4</Name>
+            <ChannelSetup>
+                <ChannelRef id="1"/>
+                <ChannelRef id="2"/>
+                <ChannelRef id="3"/>
+            </ChannelSetup>
+            <RoleSetup>
+                <RoleRef id="4"/>
+            </RoleSetup>
+        </Player>
+        <Player id="5">
+            <Name>PODD</Name>
+            <ChannelSetup>
+                <ChannelRef id="1"/>
+                <ChannelRef id="2"/>
+                <ChannelRef id="3"/>
+            </ChannelSetup>
+            <RoleSetup>
+                <RoleRef id="1"/>
+                <RoleRef id="3"/>
+            </RoleSetup>
+        </Player>
+        <Player id="6">
+            <Name>PEVEN</Name>
+            <ChannelSetup>
+                <ChannelRef id="1"/>
+                <ChannelRef id="2"/>
+                <ChannelRef id="3"/>
+            </ChannelSetup>
+            <RoleSetup>
+                <RoleRef id="2"/>
+                <RoleRef id="4"/>
+            </RoleSetup>
+        </Player>
+        <Player id="4000">
+            <Name>PBIG</Name>
+            <ChannelSetup>
+                <ChannelRef id="3567"/>
+            </ChannelSetup>
+            <RoleSetup>
+                <RoleRef id="2345"/>
+            </RoleSetup>
+        </Player>
+        <Player id="7">
+            <Name>PSUP</Name>
+            <ChannelSetup>
+                <ChannelRef id="1" groupid="1" showgroup="true" recordable="true"/>
+                <ChannelRef id="1" groupid="2" showgroup="true" recordable="true"/>
+                <ChannelRef id="2" state="rxtx" hidden="false"/>
+                <ChannelRef id="3" state="rx" recordable="true"/>
+                <ChannelRef id="4" state="rx" locked="false" recordable="true" monitor="true"/>
+            </ChannelSetup>
+            <RoleSetup>
+                <RoleRef id="5"/>
+            </RoleSetup>
+        </Player>
+    </PlayerDefs>
+
+</Configuration>

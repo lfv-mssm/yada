@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+  <comment>Default server configuration</comment>
+  <!-- Port setup -->
+  <entry key="HttpPort">10003</entry>
+  <entry key="UdpPort">10000</entry>
+  <!-- Log events -->
+  <entry key="LogEvents">true</entry>
+  <!-- ISA properties -->
+  <entry key="ISAPeriod">120</entry>
+  <entry key="ISANumChoices">5</entry>
+  <entry key="ISAKeyText0"><![CDATA[1]]></entry>
+  <entry key="ISAKeyText1"><![CDATA[2]]></entry>
+  <entry key="ISAKeyText2"><![CDATA[3]]></entry>
+  <entry key="ISAKeyText3"><![CDATA[4]]></entry>
+  <entry key="ISAKeyText4"><![CDATA[5]]></entry>
+  <entry key="ISAKeyText5"><![CDATA[6]]></entry>
+  <entry key="ISAKeyText6"><![CDATA[7]]></entry>
+  <entry key="ISAKeyText7"><![CDATA[8]]></entry>
+  <entry key="ISAKeyText8"><![CDATA[9]]></entry>
+  <entry key="ISATracePainter">bar</entry>
+  <entry key="ISAExtendedMode">false</entry>
+  <!-- Remote Control (let other applications start, pause and stop Yada groups) -->
+  <entry key="RemoteControlPort">10001</entry>
+</properties>

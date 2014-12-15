@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- 
+  Configuration for autolocate feature. Same as simple
+  but with 12 terminals and 6 groups.
+-->
+
+<Configuration codec="jspeex:7">
+
+    <TerminalDefs>
+        <Terminal id="1" x="0" y="0">
+            <Name>T1</Name>
+        </Terminal>
+        <Terminal id="2" x="150" y="0">
+            <Name>T2</Name>
+        </Terminal>
+        <Terminal id="3" x="300" y="0">
+            <Name>T3</Name>
+        </Terminal>
+        <Terminal id="4" x="450" y="0">
+            <Name>T4</Name>
+        </Terminal>
+        <Terminal id="5" x="0" y="140">
+            <Name>T5</Name>
+        </Terminal>
+        <Terminal id="6" x="150" y="140">
+            <Name>T6</Name>
+        </Terminal>
+        <Terminal id="7" x="300" y="140">
+            <Name>T7</Name>
+        </Terminal>
+        <Terminal id="8" x="450" y="140">
+            <Name>T8</Name>
+        </Terminal>
+        <Terminal id="9" x="0" y="280">
+            <Name>T9</Name>
+        </Terminal>
+        <Terminal id="10" x="150" y="280">
+            <Name>T10</Name>
+        </Terminal>
+        <Terminal id="11" x="300" y="280">
+            <Name>T11</Name>
+        </Terminal>
+        <Terminal id="12" x="450" y="280">
+            <Name>T12</Name>
+        </Terminal>
+    </TerminalDefs>
+
+    <GroupDefs>
+        <Group id="1">
+            <Name>G1</Name>
+            <Color>#BBBBFF</Color>
+        </Group>
+        <Group id="2">
+            <Name>G2</Name>
+            <Color>#FFBBFF</Color>
+        </Group>
+        <Group id="3">
+            <Name>G3</Name>
+            <Color>#BBFFBB</Color>
+        </Group>
+        <Group id="4">
+            <Name>G4</Name>
+            <Color>#FFBBBB</Color>
+        </Group>
+        <Group id="5">
+            <Name>G5</Name>
+            <Color>#FFFFBB</Color>
+        </Group>
+        <Group id="6">
+            <Name>G6</Name>
+            <Color>#BBFFFF</Color>
+        </Group>
+    </GroupDefs>
+
+    <ChannelDefs>
+        <Channel id="1">
+            <Name>C1</Name>
+        </Channel>
+        <Channel id="2">
+            <Name>C2</Name>
+        </Channel>
+    </ChannelDefs>
+
+    <RoleDefs>
+        <Role id="1">
+            <Name>R1</Name>
+            <PhoneSetup>
+                <RoleRef id="2"/>
+                <RoleRef id="3"/>
+            </PhoneSetup>
+        </Role>     
+        <Role id="2">
+            <Name>R2</Name>
+            <PhoneSetup>
+                <RoleRef id="1"/>
+                <RoleRef id="3"/>
+            </PhoneSetup>
+        </Role>     
+        <Role id="3">
+            <Name>R3</Name>
+            <PhoneSetup>
+                <RoleRef id="1"/>
+                <RoleRef id="2"/>
+            </PhoneSetup>
+        </Role>     
+    </RoleDefs>
+
+    <PlayerDefs>
+        <Player id="1">
+            <Name>P1</Name>
+            <ChannelSetup>
+                <ChannelRef id="1"/>
+                <ChannelRef id="2"/>
+            </ChannelSetup>
+            <RoleSetup>
+                <RoleRef id="1"/>
+            </RoleSetup>
+        </Player>
+        <Player id="2">
+            <Name>P2</Name>
+            <ChannelSetup>
+                <ChannelRef id="1"/>
+                <ChannelRef id="2"/>
+            </ChannelSetup>
+            <RoleSetup>
+                <RoleRef id="2"/>
+            </RoleSetup>
+        </Player>
+        <Player id="3">
+            <Name>P3</Name>
+            <ChannelSetup>
+                <ChannelRef id="1"/>
+                <ChannelRef id="2"/>
+            </ChannelSetup>
+            <RoleSetup>
+                <RoleRef id="3"/>
+            </RoleSetup>
+        </Player>
+    </PlayerDefs>
+
+</Configuration>

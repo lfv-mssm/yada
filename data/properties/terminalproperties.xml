@@ -1,0 +1,46 @@
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <!-- Configuration for localhost client -->
+    <entry key="TerminalId">1</entry>
+    <entry key="UserInterfaceStyle">slim-horiz</entry>
+    <entry key="MaxUserInterfaceSize">full</entry>
+    <entry key="HiddenMouseCursor">false</entry>
+
+    <entry key="SoundOutputDevice">0</entry>
+    <entry key="SoundInputDevice">0</entry>
+    <entry key="OutputBufferSize">4</entry>
+    <entry key="InputBufferSize">4</entry>
+    <entry key="SignalVolumeAdjustment">1.0</entry>
+    <entry key="PushToTalkInterface">serial</entry>
+    <entry key="FootSwitchInterface">ftdi</entry>
+    <entry key="FootSwitchInvertCTS">false</entry>
+    <entry key="FootSwitchPollTime">50</entry>
+    <entry key="OverPowerOtherStations">0</entry>
+
+    <!--Client set-up-->
+    <entry key="MulticastAddress">224.0.23.61</entry>
+    <entry key="MulticastPort">10002</entry>
+    <entry key="MulticastTTL">3</entry>
+    <entry key="localBindAddress">null</entry>
+    <entry key="localbindPort">0</entry>
+
+    <!--Server set-up-->
+    <entry key="ServerAddress">127.0.0.1</entry>
+    <entry key="ServerHttpPort">10003</entry>
+    <entry key="ServerUdpPort">10000</entry>
+    <entry key="ServerUdpPort">10000</entry>
+
+    <!--Theme settings, can be changed in simconfig/radio.tcl for now-->
+    <entry key="ColorRadioRxTx">#91F291</entry>
+    <entry key="ColorRadioRx">#CFCFCF</entry>
+    <entry key="ColorRadioOff">#FFFFFF</entry>
+    <entry key="ColorRadioIndicatorIdle">&gt;#FFFFFF</entry>
+    <entry key="ColorRadioIndicatorBusy">#FFFF33</entry>
+    <entry key="ColorRadioIndicatorFail">#FF6666</entry>
+    <entry key="ColorPhoneButtonActive">#CFCFCF</entry>
+    <entry key="ColorPhoneButtonInactive">#EFEFEF</entry>
+    <entry key="ColorPhoneHookButtonCalling">#FFFF33</entry>
+    <entry key="ColorPhoneHookButtonBusy">#FF6666</entry>
+    <entry key="ColorGenericButton">#DFDFDF</entry>
+</properties>
+

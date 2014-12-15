@@ -1,0 +1,5 @@
+Dial tone	350 and 440 Hz @ -13 dBm0 per tone
+Busy tone	480 and 620 Hz @ -24 dBm0 per tone interrupted at 60 interruptions per minute (0.5 sec. on, 0.5 sec. off)
+Reorder		480 and 620 Hz interrupted at 120 interruptions per minute
+Ringback	440 and 480 Hz @ -19 dBm0 per tone, at telephone exchange (2 seconds on, 4 seconds off)
+Call waiting	440 Hz @ -13 dBm0, at telephone exchange (0.3 sec. on every 10 seconds)

@@ -1,0 +1,120 @@
+
+When using the foot switches based on the FTDI-FT232RL chip it is recommended to always use the ftdi interface in yada.
+
+But if for some reason the foot switches are to be connected through the serial port (/dev/ttyUSB0) using vcp drivers, 
+the linux module ftdi_sio needs to be patched due to a bug in kernel 2.6.22+ (See http://lkml.org/lkml/2007/10/6/14).
+
+To apply the FTDI-FT232RL patch follow these instructions (patch found last in this file):
+
+# Check kernel version
+> uname -r
+2.6.22-14-generic
+# Download the corresponding kernel from http://www.eu.kernel.org/pub/linux/kernel
+# I chose the file linux-2.6.22.14.tar.bz2
+# Unpack it with tar xvfj linux-2.6.22.14.tar.bz2
+# Run make menuconfig to get a default .config file (make sure ncurses is installed)
+# Check that drivers/usb/serial/ftdi is enabled
+# Build the module (failed at first, I had to mkdir .tmp_versions in the linux-2.6.xx directory)
+> make drivers/usb/serial/ftdi_sio.ko
+# When the module has been build successfully copy the patch into the linux-2.6.22.14 directory and apply it
+> cat ftdi_sio.patch | patch -p1
+patching file drivers/usb/serial/ftdi_sio.c
+Hunk #1 succeeded at 889 (offset -3 lines).
+Hunk #2 succeeded at 1164 (offset -5 lines).
+Hunk #3 succeeded at 2096 (offset -8 lines).
+# Build the new module
+> make drivers/usb/serial/ftdi_sio.ko
+# Remove the old module
+> sudo rmmod ftdi_sio
+# Copy the new module to the correct directory, make sure to backup the old one first!
+> sudo cp drivers/usb/serial/ftdi_sio.ko /lib/modules/2.6.22-14-generic/kernel/drivers/usb/serial/
+# Install the new module
+> sudo modprobe ftdi_sio
+# Plug in a FTDI device and check dmesg for results
+> dmesg
+[ 2382.548000] /build/buildd/linux-source-2.6.22-2.6.22/drivers/usb/serial/usb-serial.c: USB Serial deregistering driver FTDI USB Serial Device
+[ 2400.804000] /build/buildd/linux-source-2.6.22-2.6.22/drivers/usb/serial/usb-serial.c: USB Serial support registered for FTDI USB Serial Device
+[ 2400.804000] usbcore: registered new interface driver ftdi_sio
+[ 2400.804000] drivers/usb/serial/ftdi_sio.c: v1.4.3:USB FTDI Serial Converters Driver
+[ 2407.400000] usb 1-2: new full speed USB device using uhci_hcd and address 8
+[ 2407.604000] usb 1-2: configuration #1 chosen from 1 choice
+[ 2407.604000] ftdi_sio 1-2:1.0: FTDI USB Serial Device converter detected
+[ 2407.604000] drivers/usb/serial/ftdi_sio.c: Detected FT232RL
+[ 2407.604000] usb 1-2: FTDI USB Serial Device converter now attached to ttyUSB0
+# It's a success!!
+# The tools statserial can be used to test the functionality directly on the driver
+> statserial /dev/ttyUSB0
+Signal  Pin  Pin  Direction  Status  Full
+Name    (25) (9)  (computer)         Name
+-----   ---  ---  ---------  ------  -----
+FG       1    -      -           -   Frame Ground
+TxD      2    3      out         -   Transmit Data
+RxD      3    2      in          -   Receive  Data
+RTS      4    7      out         1   Request To Send
+CTS      5    8      in          0   Clear To Send
+DSR      6    6      in          0   Data Set Ready
+GND      7    5      -           -   Signal Ground
+DCD      8    1      in          0   Data Carrier Detect
+DTR     20    4      out         1   Data Terminal Ready
+RI      22    9      in          0   Ring Indicator
+# The line CTS should switch status to 1 when the foot switch is being pressed
+
+/Andreas Alptun 2007-12-15
+
+
+--- PATCH FOUND BELOW
+
+From: Francesco Sacchi <batt@develer.com>
+
+Reading serial port status lines was broken on the FT232RL since when it
+has been detected as a separate chip (2.6.22+).  Previously, it would work
+because it was just handled as an FT232BM.
+
+Additionally, we were also forgetting to remove the dev_attr_latency_timer
+sysfs file in the FT232RL case.
+
+Note by Bernardo Innocenti: the ftdi_sio maintainer appears to have stepped
+down, so I'm sending this to Greg Kroah-Hartman as the generic USB serial
+maintainer.  Please, let me know if this is not appropriate.
+
+Signed-Off-By: Francesco Sacchi <batt@develer.com>
+Signed-Off-By: Bernardo Innocenti <bernie@codewiz.org>
+
+---
+ drivers/usb/serial/ftdi_sio.c |    7 +++++--
+ 1 files changed, 5 insertions(+), 2 deletions(-)
+diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
+index 2d04585..940b0c4 100644
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -892,7 +892,7 @@ static __u32 get_ftdi_divisor(struct usb_serial_port * port)
+ 		break;
+ 	case FT232BM: /* FT232BM chip */
+ 	case FT2232C: /* FT2232C chip */
+-	case FT232RL:
++	case FT232RL: /* FT232RL chip */
+ 		if (baud <= 3000000) {
+ 			div_value = ftdi_232bm_baud_to_divisor(baud);
+ 		} else {
+@@ -1169,7 +1169,9 @@ static void remove_sysfs_attrs(struct usb_serial_port *port)
+ 	/* XXX see create_sysfs_attrs */
+ 	if (priv->chip_type != SIO) {
+ 		device_remove_file(&port->dev, &dev_attr_event_char);
+-		if (priv->chip_type == FT232BM || priv->chip_type == FT2232C) {
++		if (priv->chip_type == FT232BM ||
++		    priv->chip_type == FT2232C ||
++		    priv->chip_type == FT232RL) {
+ 			device_remove_file(&port->dev, &dev_attr_latency_timer);
+ 		}
+ 	}
+@@ -2102,6 +2104,7 @@ static int ftdi_tiocmget (struct usb_serial_port *port, struct file *file)
+ 	case FT8U232AM:
+ 	case FT232BM:
+ 	case FT2232C:
++	case FT232RL:
+ 		/* the 8U232AM returns a two byte value (the sio is a 1 byte value) - in the same
+ 		   format as the data returned from the in point */
+ 		if ((ret = usb_control_msg(port->serial->dev,
+
+
+

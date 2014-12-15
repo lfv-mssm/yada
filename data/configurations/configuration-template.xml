@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- 
+  Configuration attributes
+    codec="null|jspeex:1-10"
+ -->
+<Configuration codec="jspeex:7">
+
+    <!-- 
+      Terminal attributes
+        id="1-4000"
+        x="0-"
+        y="0-"
+     -->
+    <TerminalDefs>
+        <Terminal id="1" x="0" y="0">
+            <Name>Terminal</Name>
+        </Terminal>
+    </TerminalDefs>
+
+    <!-- 
+      Group attributes
+        id="1-4000"
+     -->
+    <GroupDefs>
+        <Group id="1">
+            <Name>Group</Name>
+            <Color>#BBBBFF</Color>
+        </Group>
+    </GroupDefs>
+
+    <!-- 
+      Channel attributes
+        id="1-4000"
+        groupid="1-4000" (optional)
+        state="rxtx|rx|off" (optional)
+        locked="true|false" (optional)
+        hidden="true|false" (optional)
+        recordable="true|false" (optional)
+        showgroup="true|false" (optional)
+     -->
+    <ChannelDefs>
+        <Channel id="1">
+            <Name>Channel</Name>
+        </Channel>
+    </ChannelDefs>
+
+    <!-- 
+      Role/RoleRef attributes
+        id="1-4000"
+        groupid="1-4000" (optional)
+        showgroup="true|false" (optional)
+     -->
+    <RoleDefs>
+        <Role id="1">
+            <Name>Role</Name>
+            <PhoneSetup>
+                <RoleRef id="x"/>
+            </PhoneSetup>
+        </Role>
+    </RoleDefs>
+
+    <!-- 
+      Player attributes
+        id="1-4000"
+      ChannelRef attributes
+        id="1-4000"
+        groupid="1-4000" (optional)
+        state="rxtx|rx|off" (optional)
+        locked="true|false" (optional)
+        hidden="true|false" (optional)
+        recordable="true|false" (optional)
+        showgroup="true|false" (optional)
+      RoleRef attributes
+        id="1-4000"
+        groupid="1-4000" (optional)
+        showgroup="true|false" (optional)
+     -->
+    <PlayerDefs>
+        <Player id="1">
+            <Name>Player</Name>
+            <ChannelSetup>
+                <ChannelRef id="1"/>
+            </ChannelSetup>
+            <RoleSetup>
+                <RoleRef id="1"/>
+            </RoleSetup>
+        </Player>
+    </PlayerDefs>
+
+</Configuration>
