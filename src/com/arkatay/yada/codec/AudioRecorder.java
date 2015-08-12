@@ -217,6 +217,7 @@ public class AudioRecorder implements AudioCodecConstants, AudioDecoderListener 
             this.monitoredTerminalId = monitoredTerminalId;
 
             this.recordStartTime    = System.currentTimeMillis();
+            new File("data/recordings/temp").mkdirs();
             this.temporaryFilename  = "data/recordings/temp/r"+recordStartTime+".raw";
             this.outputStream       = new FileOutputStream(temporaryFilename);
 
@@ -250,7 +251,7 @@ public class AudioRecorder implements AudioCodecConstants, AudioDecoderListener 
             else {
                 filename = "Channel("+(channelId&Constants.ID_MASK_CHANNEL);
                 if(channelName!=null) {
-                    filename += "!"+channelName;
+                    filename += "_"+channelName;
                 }
                 filename += ")-Group("+((channelId&Constants.ID_MASK_GROUP)>>Constants.ID_BITSHIFT)+")-";
             }

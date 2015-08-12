@@ -93,8 +93,9 @@ public interface Constants {
     public static final int PHONE_STATE_RINGING     = 6;
     public static final int PHONE_STATE_ANSWER_REQ  = 7;
 
-    public static final int CLIENT_STATE_UNINITIALIZED = 0;
-    public static final int CLIENT_STATE_DISCONNECTED  = 1;
-    public static final int CLIENT_STATE_CONNECTED     = 2;
-    public static final int CLIENT_STATE_STARTED       = 3;
+    public static final int CLIENT_STATE_UNINITIALIZED	= 0;
+    public static final int CLIENT_STATE_DISCONNECTED	= 1;
+    public static final int CLIENT_STATE_CONNECTED		= 2;
+    public static final int CLIENT_STATE_STARTED		= 3;
+    public static final int CLIENT_STATE_PAUSED			= 4;
 }

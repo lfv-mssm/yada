@@ -1,4 +1,4 @@
-/** 
+/**
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -55,6 +55,7 @@ public final class Packet {
     public static final int FLAG_STOP         = 0x02;
     public static final int FLAG_CLOSE        = 0x04;
     public static final int FLAG_RESET        = 0x08;
+    public static final int FLAG_PAUSE        = 0x10;
     public static final int FLAG_MULTICAST    = 0x20;
     public static final int FLAG_FORWARD      = 0x40;
 

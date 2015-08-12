@@ -1,4 +1,4 @@
-/** 
+/**
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -471,13 +471,18 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
                                 if(state.equals("started")) {
                                     // send start packet
                                     log.info("Sending start to terminal "+tid);
-                                    networkManager.sendSessionRequestStart(tid);
+                                    networkManager.sendSessionRequestStart(tid);                                    
                                 }
                                 else if(state.equals("stopped")) {
                                     // send stop packet
                                     log.info("Sending stop to terminal "+tid);
                                     networkManager.sendSessionRequestStop(tid);
                                 }
+                                else if(state.equals("paused")) {
+                                    // send stop packet
+                                    log.info("Sending stop to terminal "+tid);
+                                    networkManager.sendSessionRequestPause(tid);
+                                }                                
                             }
                         }
                     }
@@ -845,6 +850,16 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
                                     else
                                         ecrd.setAttribute("recordable", "true");
                                 }
+                                
+                                // Merge auto record
+                                if(hasStateOr(ecrs,ecrd,"autorec")) {
+                                    String recs = DomTools.getAttributeString(ecrs, "autorec", "false", false);
+                                    String recd = DomTools.getAttributeString(ecrd, "autorec", "false", false);
+                                    if(recs.equals("false")&&recd.equals("false"))
+                                        ecrd.setAttribute("autorec", "false");
+                                    else
+                                        ecrd.setAttribute("autorec", "true");
+                                }                                
 
                                 // Merge monitor
                                 if(hasStateOr(ecrs,ecrd,"monitor")) {
@@ -1478,7 +1493,7 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
             networkManager.setNetworkHandler(this);
 
             isaTracePainter = serverProperties.getProperty("ISATracePainter","line");
-            panel.resetIsaChart();
+            //panel.resetIsaChart();
 
         } catch(Exception ex) {
             log.error("Unable to start server! ", ex);
@@ -1890,6 +1905,7 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
                 }
                 else if(state.equals("paused")) {
                     eg.setAttribute("state", "started");
+                    updateTerminals(ALL, groupId);
                     updateView();
                     ServerLogger logger = loggerMap.get(groupId);
                     if(logger!=null) {
@@ -1945,6 +1961,7 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
                 if(state.equals("started")) {
                         isaStop(gid);
                     eg.setAttribute("state", "paused");
+                    updateTerminals(ALL, gid);
                     updateView();
                     ServerLogger logger = loggerMap.get(gid);
                     if(logger!=null) {

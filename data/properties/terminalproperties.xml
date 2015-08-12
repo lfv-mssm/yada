@@ -2,11 +2,11 @@
 <properties>
     <!-- Configuration for localhost client -->
     <entry key="TerminalId">1</entry>
-    <entry key="UserInterfaceStyle">slim-horiz</entry>
-    <entry key="MaxUserInterfaceSize">full</entry>
+    <entry key="UserInterfaceStyle">full</entry>
+    <entry key="MaxUserInterfaceSize">800x600</entry>
     <entry key="HiddenMouseCursor">false</entry>
 
-    <entry key="SoundOutputDevice">0</entry>
+    <entry key="SoundOutputDevice">1</entry>
     <entry key="SoundInputDevice">0</entry>
     <entry key="OutputBufferSize">4</entry>
     <entry key="InputBufferSize">4</entry>

@@ -49,7 +49,7 @@
     </GroupDefs>
 
     <ChannelDefs>
-        <Channel id="1" recordable="true" state="rxtx">
+        <Channel id="1" recordable="true" autorec="true" state="rxtx">
             <Name>C1</Name>
         </Channel>
         <Channel id="2">

@@ -1,4 +1,4 @@
-/** 
+/**
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -1121,6 +1121,10 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
                 if(!DomTools.getAttributeString(channel.getElement(), "state", "off", false).equals("off")) {
                     packetReceiver.openChannel(channel.getId());
                 }
+                if(!DomTools.getAttributeBoolean(channel.getElement(), "autorec", false, false)) {
+                	recordStateUpdated(channel.getId(), true);
+                    updateRecorder(channel.getId());
+                }                
             }
 
             // Force all settings
@@ -1260,7 +1264,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
         }
 
         semChannelsLeft = true;
-        if(state==CLIENT_STATE_STARTED) {
+        if(state>=CLIENT_STATE_STARTED) {
 
             log.info("Stopping session");
 
@@ -1370,10 +1374,36 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
             }
         }
     }
+    
+    public synchronized void pause() {
+        Iterator<ItemDispatcher> iterd = packetReceiver.getDataPacketDispatcherCollection().iterator();
+        while(iterd.hasNext()) {
+            if(audioRecorder!=null) {
+            	AudioDecoder decoder = (AudioDecoder)iterd.next();
+            	int channelId = decoder.getDecoderId();
+            	ClientChannel channel = bundle.getChannel(channelId);
+            	if (channel != null) {
+            		if (state == CLIENT_STATE_STARTED) {
+            			log.info("Pausing session");
+		                recordStateUpdated(channel.getId(), false);
+		                updateRecorder(channel.getId());
+		                state = CLIENT_STATE_PAUSED;
+            		} else if (state == CLIENT_STATE_PAUSED) {
+            			log.info("Resuming session");
+		                if(!DomTools.getAttributeBoolean(channel.getElement(), "autorec", false, false)) {
+		                	recordStateUpdated(channel.getId(), true);
+		                    updateRecorder(channel.getId());
+		                }
+		                state = CLIENT_STATE_STARTED;
+            		}
+            	}
+            }
+        }    	
+    }
 
     public synchronized void rxtxStateUpdated(int channelId, boolean rx, boolean tx) {
         if(bundle==null) return;
-        if(state!=CLIENT_STATE_STARTED) return;
+        if(state<CLIENT_STATE_STARTED) return;
         ClientChannel channel = bundle.getChannel(channelId);
         if(channel!=null) {
             Element ec = channel.getElement();
@@ -1419,7 +1449,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
     }
 
     private synchronized void updateRecorder(int channelId) {
-        if(bundle==null || state!=CLIENT_STATE_STARTED || audioRecorder==null) return;
+        if(bundle==null || state<CLIENT_STATE_STARTED || audioRecorder==null) return;
 
         ClientChannel channel = bundle.getChannel(channelId);
         if(channel!=null) {
@@ -1462,30 +1492,32 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
 
     public synchronized void recordStateUpdated(int channelId, boolean recording) {
         if(bundle==null) return;
-        if(state!=CLIENT_STATE_STARTED || audioRecorder==null) return;
+        if(state<CLIENT_STATE_STARTED || audioRecorder==null) return;
 
         ClientChannel channel = bundle.getChannel(channelId);
         if(channel!=null) {
             Element ec = channel.getElement();
 
-            // Stop recording if state is off
-            if(DomTools.getAttributeString(ec, "state", "off", true).equals("off")) {
-                ec.setAttribute("recording", "false");
-                audioRecorder.stopRecording(channelId);
+            if (ec != null) { 
+	            // Stop recording if state is off
+	            if(DomTools.getAttributeString(ec, "state", "off", true).equals("off")) {
+	                ec.setAttribute("recording", "false");
+	                audioRecorder.stopRecording(channelId);
+	            }
+	            else {
+	                ec.setAttribute("recording", String.valueOf(recording));
+	                updateRecorder(channelId);
+	            }
+	
+	            if(view!=null)
+	                view.updateRadioView();
             }
-            else {
-                ec.setAttribute("recording", String.valueOf(recording));
-                updateRecorder(channelId);
-            }
-
-            if(view!=null)
-                view.updateRadioView();
         }
     }
 
     public synchronized void channelButtonPressed(int channelId) {
         if(bundle==null) return;
-        if(state!=CLIENT_STATE_STARTED) return;
+        if(state<CLIENT_STATE_STARTED) return;
         if(radioState!=RADIO_STATE_IDLE) return;
 
         if(!waitChannelAcquiry())
@@ -1511,7 +1543,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
 
     public synchronized void channelButtonReleased(int channelId) {
         if(bundle==null) return;
-        if(state!=CLIENT_STATE_STARTED) return;
+        if(state<CLIENT_STATE_STARTED) return;
         if(radioState!=RADIO_STATE_CHANNEL) return;
         releaseAcquiredChannels();
         radioState = RADIO_STATE_IDLE;
@@ -1522,7 +1554,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
 //              isaValueChosen(0);
 //      }
         if(bundle==null) return;
-        if(state!=CLIENT_STATE_STARTED) return;
+        if(state<CLIENT_STATE_STARTED) return;
 
         // Return if a channel button is pressed
         if(radioState==RADIO_STATE_CHANNEL) return;
@@ -1587,7 +1619,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
 
     public synchronized void talkButtonReleased(int device) {
         if(bundle==null) return;
-        if(state!=CLIENT_STATE_STARTED) return;
+        if(state<CLIENT_STATE_STARTED) return;
 
         // BN: HACK controller wants to be able to speak, even if incoming transmission
         if (properties.getOverPowerOtherStations() == 1) {
@@ -1610,7 +1642,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
 
     public synchronized void dialButtonClicked(int roleId, int peerId) {
         if(bundle==null) return;
-        if(state!=CLIENT_STATE_STARTED) return;
+        if(state<CLIENT_STATE_STARTED) return;
         if(phoneState==PHONE_STATE_RINGING) {
                 Element eh = model.getRootElement().getChild("HookButton");
             int thisId   = DomTools.getAttributeInt(eh, "this",  0, true);
@@ -1643,7 +1675,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
 
     public synchronized void hookButtonClicked() {
         if(bundle==null) return;
-        if(state!=CLIENT_STATE_STARTED) return;
+        if(state<CLIENT_STATE_STARTED) return;
         Element eh = model.getRootElement().getChild("HookButton");
         if(phoneState==PHONE_STATE_RINGING) {
             eh.setAttribute("state", "in_call");
@@ -1669,7 +1701,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
     }
 
     public synchronized void settingsDialogOpen() {
-        if(state!=CLIENT_STATE_STARTED) return;
+        if(state<CLIENT_STATE_STARTED) return;
         // This button is also used to stop the auto tester
         if(autoTesterEnabled) {
             autoTester.stopTester();
@@ -1731,7 +1763,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
     }
 
     public synchronized void settingsValueChanged(int id, int value) {
-        if(state!=CLIENT_STATE_STARTED) return;
+        if(state<CLIENT_STATE_STARTED) return;
         Settings s = Settings.getInstance();
         switch(id) {
             case(Settings.ID_MASTER_VOLUME): {
@@ -1871,7 +1903,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
     }
 
     public synchronized void closeButtonClicked() {
-        if(state!=CLIENT_STATE_STARTED) return;
+        if(state<CLIENT_STATE_STARTED) return;
         if(Config.CLIENT_EXIT_DIALOG) {
             int res = JOptionPane.showConfirmDialog(view,
                     "Are you sure you want to exit the terminal application?",
@@ -1952,7 +1984,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
     }
 
     public synchronized void sessionStart() {
-        if(state!=CLIENT_STATE_STARTED && timer!=null) {
+        if(state<CLIENT_STATE_STARTED && timer!=null) {
             log.debug("Start session packet received");
             timer.schedule(new TimerTask() {
                 public void run() {
@@ -1960,10 +1992,14 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
                 }
             }, DELAY_START + (int)(2*Math.random()*DELAY_START_VARIANCE)-DELAY_START_VARIANCE);
         }
+        else if (state==CLIENT_STATE_PAUSED) {
+        	log.debug("Start session packet received (resume from pause)");
+        	pause();        	
+        }
     }
 
     public synchronized void sessionStop() {
-        if(state==CLIENT_STATE_STARTED) {
+        if(state>=CLIENT_STATE_STARTED) {
             log.debug("Stop session packet received");
             stop(true, false);
         }
@@ -1986,6 +2022,13 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
             }, DELAY_RECONNECT);
         }
     }
+    
+    public synchronized void sessionPause() {
+        if(state==CLIENT_STATE_STARTED) {
+            log.debug("Pause session packet received");
+            pause();
+        }
+   }    
 
     public synchronized void sessionConnected() {
     }
@@ -2000,7 +2043,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
 
         // Update role activity
         int[] roleActivityArray = packet.getAttributeList(Packet.ATTR_ROLE_ACTIVITY);
-        if(state==CLIENT_STATE_STARTED && model!=null && roleActivityArray!=null) {
+        if(state>=CLIENT_STATE_STARTED && model!=null && roleActivityArray!=null) {
             log.debug("Received info packet ROLE_ACTIVITY");
             // Update all peers (online and in call info)
             Iterator iter1 = model.getRootElement().getChild("RoleSetup").getChildren().iterator();
@@ -2242,7 +2285,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
     public synchronized void phoneRingIncoming(ClientTerminal sourceTerminal, int sourceRoleId, int destRoleId) {
         if(model==null) return;
 
-        if(state!=CLIENT_STATE_STARTED) return;
+        if(state<CLIENT_STATE_STARTED) return;
         if(phoneState==PHONE_STATE_IDLE||phoneState==PHONE_STATE_BUSY) {
             Element eh = model.getRootElement().getChild("HookButton");
             eh.setAttribute("src", getRoleName(sourceRoleId));
@@ -2296,7 +2339,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
     public synchronized void phoneAnswerIncoming(ClientTerminal sourceTerminal, int sourceRoleId, int destRoleId) {
         if(model==null) return;
 
-        if(state!=CLIENT_STATE_STARTED) return;
+        if(state<CLIENT_STATE_STARTED) return;
         if(phoneState==PHONE_STATE_DIALING) {
             Element eh = model.getRootElement().getChild("HookButton");
             eh.setAttribute("state", "in_call");
@@ -2347,7 +2390,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
     public synchronized void phoneHangupIncoming(ClientTerminal sourceTerminal, int sourceRoleId, int destRoleId) {
         if(model==null) return;
 
-        if(state!=CLIENT_STATE_STARTED) return;
+        if(state<CLIENT_STATE_STARTED) return;
         if(phoneState==PHONE_STATE_IN_CALL||phoneState==PHONE_STATE_RINGING||phoneState==PHONE_STATE_DIALING) {
             Element eh = model.getRootElement().getChild("HookButton");
             eh.setAttribute("state", "idle");

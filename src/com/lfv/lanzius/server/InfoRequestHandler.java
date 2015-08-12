@@ -1,4 +1,4 @@
-/** 
+/**
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -145,6 +145,7 @@ public class InfoRequestHandler extends AbstractHandler {
                                     ch.setState(DomTools.getPrioritizedAttribute("state", "off", ecr, ec));
                                     ch.setLocked(DomTools.getPrioritizedAttribute("locked", "false", ecr, ec));
                                     ch.setRecordable(DomTools.getPrioritizedAttribute("recordable", "false", ecr, ec));
+                                    ch.setAutoRecord(DomTools.getPrioritizedAttribute("autorec", "false", ecr, ec));
                                     ch.setHidden(DomTools.getPrioritizedAttribute("hidden", "false", ecr, ec));
                                     ch.setMonitor(DomTools.getPrioritizedAttribute("monitor", "false", ecr, ec));
 
@@ -285,6 +286,7 @@ public class InfoRequestHandler extends AbstractHandler {
         private String state;
         private String locked;
         private String recordable;
+        private String autoRecord;
         private String hidden;
         private String name;
         private String monitor;
@@ -308,6 +310,10 @@ public class InfoRequestHandler extends AbstractHandler {
         public String getRecordable() {
             return recordable;
         }
+        
+        public String getAutoRecord() {
+            return autoRecord;
+        }        
 
         public String getHidden() {
             return hidden;
@@ -336,6 +342,10 @@ public class InfoRequestHandler extends AbstractHandler {
         private void setRecordable(String recordable) {
             this.recordable = recordable;
         }
+        
+        private void setAutoRecord(String autoRecord) {
+            this.autoRecord = autoRecord;
+        }        
 
         private void setHidden(String hidden) {
             this.hidden = hidden;

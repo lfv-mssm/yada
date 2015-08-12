@@ -1,4 +1,4 @@
-/** 
+/**
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -26,6 +26,7 @@ public interface ClientNetworkHandler {
     public void sessionStart();
     public void sessionStop();
     public void sessionClose();
+    public void sessionPause();
 
     public void sessionConnected();
     public void sessionDisconnected();

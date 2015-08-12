@@ -1,4 +1,4 @@
-/** 
+/**
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -222,7 +222,7 @@ public class ServerNetworkManager implements NetworkConstants {
             SocketAddress socketAddr = terminal.getSocketAddress();
             if(socketAddr!=null) {
                 if(log.isDebugEnabled())
-                    log.debug("Session: Sending request to "+terminalId);
+                    log.debug("Session: Sending request to "+terminalId+" @ "+ socketAddr);
 
                 // Set up a new change request packet
                 Packet packet = PacketPool.getPool().borrowPacket(Packet.SESSION | Packet.REQUEST);
@@ -255,6 +255,9 @@ public class ServerNetworkManager implements NetworkConstants {
     public void sendSessionRequestClose(int terminalId) {
         sendSessionRequest(terminalId, Packet.FLAG_CLOSE);
     }
+    public void sendSessionRequestPause(int terminalId) {
+        sendSessionRequest(terminalId, Packet.FLAG_PAUSE);
+    }    
 
     public void sendIsaStartRequest(int terminalId, int period, int isaNumChoices, boolean isaExtendedMode, String isakeytext[]) {
         ServerTerminal terminal = bundle.getTerminal(terminalId);
@@ -287,7 +290,10 @@ public class ServerNetworkManager implements NetworkConstants {
 
                 // Send packet
                 log.debug("Sending ISA request with ID: " + packet.getTransactionId());
-                transactionManager.sendRequest(packet);
+                transactionManager.sendRequest(packet,
+                        TRANSACTION_TIMEOUT,
+                        TRANSACTION_RETRIES,
+                        new EmptyResponsePacketHandler());
             }
             else {
                 log.warn("Unable to send ISA request, terminal "+terminal.getId()+" has no socket address!");

@@ -1,4 +1,4 @@
-/** 
+/**
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -89,12 +89,12 @@ public class ClientNetworkManager implements NetworkConstants {
         this.serverSocketAddr = new SocketAddress(serverSocketAddr);
 
         // Resolve local host address
-        InetAddress localHost = getLocalHostFix();
-        if(localHost==null) {
-            localHost = InetAddress.getLocalHost();
+        //InetAddress localHost = getLocalHostFix();
+        //if(localHost==null) {
+            InetAddress localHost = InetAddress.getLocalHost();
             if(localHost==null)
                 throw new UnknownHostException("Could not resolve ip address of localhost");
-        }
+        //}
 
         // The socket to be used for sending and receiving unicast packets
         DatagramSocket usocket;
@@ -281,6 +281,9 @@ public class ClientNetworkManager implements NetworkConstants {
                     connected = false;
                     networkHandler.sessionClose();
                 }
+                else if (requestPacket.getFlag(Packet.FLAG_PAUSE)) {
+                	networkHandler.sessionPause();
+                }
                 else
                     log.warn("Session: Unknown request!");
             }
@@ -445,6 +448,14 @@ public class ClientNetworkManager implements NetworkConstants {
         int ISA_TIMEOUT = 30000;
         boolean executing;
         public void handleRequest(Packet requestPacket) {
+
+                SocketAddress socketAddress = requestPacket.getSocketAddress();
+
+                // Setup and send response back to server directly
+                Packet responsePacket = PacketPool.getPool().borrowPacket(Packet.ISA | Packet.RESPONSE);
+                responsePacket.getSocketAddress().setAddress(socketAddress);
+                transactionManager.sendResponse(responsePacket, requestPacket.getTransactionId());
+
                 if (isaTimer != null) {
                         isaTimer.cancel();
                         isaTimer = null;
@@ -776,6 +787,7 @@ public class ClientNetworkManager implements NetworkConstants {
             Enumeration e2 = networkInterface.getInetAddresses();
             while(e2.hasMoreElements()) {
                 InetAddress ip = (InetAddress)e2.nextElement();
+                //if(!ip.isLoopbackAddress() && !ip.isSiteLocalAddress() && ip.getHostAddress().indexOf(":")==-1) {
                 if(!ip.isLoopbackAddress() && ip.getHostAddress().indexOf(":")==-1) {
                     return ip;
                 }
