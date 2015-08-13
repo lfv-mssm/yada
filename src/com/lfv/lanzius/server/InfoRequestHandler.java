@@ -144,8 +144,12 @@ public class InfoRequestHandler extends AbstractHandler {
                                     // All other attrs
                                     ch.setState(DomTools.getPrioritizedAttribute("state", "off", ecr, ec));
                                     ch.setLocked(DomTools.getPrioritizedAttribute("locked", "false", ecr, ec));
-                                    ch.setRecordable(DomTools.getPrioritizedAttribute("recordable", "false", ecr, ec));
-                                    ch.setAutoRecord(DomTools.getPrioritizedAttribute("autorec", "false", ecr, ec));
+                                    ch.setRecordable(DomTools.getPrioritizedAttribute("recordable", "false", ecr, ec)); 
+                                    ch.setAutorec(DomTools.getPrioritizedAttribute("autorec", "false", ecr, ec));
+                                    if (ch.getAutorec().equals("true")) {
+                                    	// Recordable must be true for autorec to show recording status in GUI
+                                    	ch.setRecordable("true");
+                                    }
                                     ch.setHidden(DomTools.getPrioritizedAttribute("hidden", "false", ecr, ec));
                                     ch.setMonitor(DomTools.getPrioritizedAttribute("monitor", "false", ecr, ec));
 
@@ -286,7 +290,7 @@ public class InfoRequestHandler extends AbstractHandler {
         private String state;
         private String locked;
         private String recordable;
-        private String autoRecord;
+        private String autorec;
         private String hidden;
         private String name;
         private String monitor;
@@ -311,8 +315,8 @@ public class InfoRequestHandler extends AbstractHandler {
             return recordable;
         }
         
-        public String getAutoRecord() {
-            return autoRecord;
+        public String getAutorec() {
+            return autorec;
         }        
 
         public String getHidden() {
@@ -343,8 +347,8 @@ public class InfoRequestHandler extends AbstractHandler {
             this.recordable = recordable;
         }
         
-        private void setAutoRecord(String autoRecord) {
-            this.autoRecord = autoRecord;
+        private void setAutorec(String autoRecord) {
+            this.autorec = autoRecord;
         }        
 
         private void setHidden(String hidden) {

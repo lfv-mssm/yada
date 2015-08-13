@@ -1121,7 +1121,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
                 if(!DomTools.getAttributeString(channel.getElement(), "state", "off", false).equals("off")) {
                     packetReceiver.openChannel(channel.getId());
                 }
-                if(!DomTools.getAttributeBoolean(channel.getElement(), "autorec", false, false)) {
+                if(DomTools.getAttributeBoolean(channel.getElement(), "autorec", false, false)) {
                 	recordStateUpdated(channel.getId(), true);
                     updateRecorder(channel.getId());
                 }                
@@ -1390,7 +1390,7 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
 		                state = CLIENT_STATE_PAUSED;
             		} else if (state == CLIENT_STATE_PAUSED) {
             			log.info("Resuming session");
-		                if(!DomTools.getAttributeBoolean(channel.getElement(), "autorec", false, false)) {
+		                if(DomTools.getAttributeBoolean(channel.getElement(), "autorec", false, false)) {
 		                	recordStateUpdated(channel.getId(), true);
 		                    updateRecorder(channel.getId());
 		                }

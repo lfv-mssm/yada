@@ -5,7 +5,7 @@
 	<Codec>$Codec</Codec>
 	<ChannelSetup>
 	#foreach ( $Channel in $ChannelList )
-		<Channel id="$Channel.Id" state="$Channel.State" locked="$Channel.Locked" recordable="$Channel.Recordable" hidden="$Channel.Hidden" monitor="$Channel.Monitor">
+		<Channel id="$Channel.Id" state="$Channel.State" locked="$Channel.Locked" recordable="$Channel.Recordable" autorec="$Channel.Autorec" hidden="$Channel.Hidden" monitor="$Channel.Monitor">
 			<Name>$Channel.Name</Name>
 		</Channel>
 	#end
