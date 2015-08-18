@@ -1,15 +1,5 @@
 package com.lfv.lanzius.server;
 
-import info.monitorenter.gui.chart.ITrace2D;
-import info.monitorenter.gui.chart.ZoomableChart;
-import info.monitorenter.gui.chart.IAxis.AxisTitle;
-import info.monitorenter.gui.chart.rangepolicies.RangePolicyFixedViewport;
-import info.monitorenter.gui.chart.rangepolicies.RangePolicyHighestValues;
-import info.monitorenter.gui.chart.traces.Trace2DLtd;
-import info.monitorenter.gui.chart.traces.painters.TracePainterVerticalBar;
-import info.monitorenter.gui.chart.views.ChartPanel;
-import info.monitorenter.util.Range;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -26,6 +16,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextLayout;
 import java.text.AttributedString;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -44,6 +35,17 @@ import org.jdom.Element;
 import com.lfv.lanzius.Constants;
 import com.lfv.lanzius.DomTools;
 
+import info.monitorenter.gui.chart.Chart2D;
+import info.monitorenter.gui.chart.IAxis.AxisTitle;
+import info.monitorenter.gui.chart.ITrace2D;
+import info.monitorenter.gui.chart.ZoomableChart;
+import info.monitorenter.gui.chart.labelformatters.LabelFormatterNumber;
+import info.monitorenter.gui.chart.rangepolicies.RangePolicyMinimumViewport;
+import info.monitorenter.gui.chart.traces.Trace2DLtd;
+import info.monitorenter.gui.chart.traces.painters.TracePainterVerticalBar;
+import info.monitorenter.gui.chart.views.ChartPanel;
+import info.monitorenter.util.Range;
+
 /**
  * <p>
  * WorkspaceView
@@ -52,7 +54,7 @@ import com.lfv.lanzius.DomTools;
  *
  * @author <a href="mailto:andreas@verido.se">Andreas Alptun</a>
  * @version Yada 2 (Lanzius)
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -80,6 +82,7 @@ public class WorkspaceView extends JPanel implements MouseListener, Constants {
     private ImageIcon indicatorMonitored;
     private ImageIcon indicatorRelocated;
     private ImageIcon indicatorIsa;
+    private ImageIcon indicatorAutoIsa;
 
     private HashMap<Integer,Terminal> terminalMap;
     private HashMap<Integer,ITrace2D> isaTraces;
@@ -90,7 +93,7 @@ public class WorkspaceView extends JPanel implements MouseListener, Constants {
 //    private double isaStartTime;
 //    private boolean isaRunning;
 
-    private ZoomableChart isaChart = null;
+    private Chart2D isaChart = null;
     private JFrame isaFrame = null;
 
     Color[] chartColors = {
@@ -116,6 +119,7 @@ public class WorkspaceView extends JPanel implements MouseListener, Constants {
         indicatorMonitored = new ImageIcon("data/resources/icons/ind_monitored.png");
         indicatorRelocated = new ImageIcon("data/resources/icons/ind_relocated.png");
         indicatorIsa = new ImageIcon("data/resources/icons/ind_isa.png");
+        indicatorAutoIsa = new ImageIcon("data/resources/icons/ind_isa_gray.png");
         documentVersion = -1;
         setOpaque(true);
         addMouseListener(this);
@@ -138,11 +142,14 @@ public class WorkspaceView extends JPanel implements MouseListener, Constants {
                 // add the chart to the frame:
                 isaChart.getAxisY().setPaintGrid(true);
                 isaChart.setGridColor(Color.LIGHT_GRAY);
-                isaChart.getAxisX().setRangePolicy(new RangePolicyHighestValues());
+                isaChart.getAxisX().setFormatter(new LabelFormatterNumber(NumberFormat.getIntegerInstance()));
+                isaChart.getAxisX().setRangePolicy(new RangePolicyMinimumViewport(new Range(0, 10)));
                 if (server.getIsaExtendedMode()) {
-                        isaChart.getAxisY().setRangePolicy(new RangePolicyFixedViewport(new Range(0, 9)));
+                	isaChart.getAxisY().setFormatter(new LabelFormatterNumber(NumberFormat.getIntegerInstance()));
+                	isaChart.getAxisY().setRangePolicy(new RangePolicyMinimumViewport(new Range(0, 9)));
                 } else {
-                        isaChart.getAxisY().setRangePolicy(new RangePolicyFixedViewport(new Range(0, 5)));
+                	isaChart.getAxisY().setFormatter(new LabelFormatterNumber(NumberFormat.getIntegerInstance()));
+                	isaChart.getAxisY().setRangePolicy(new RangePolicyMinimumViewport(new Range(0, 5)));
                 }
                 isaChart.getAxisX().setAxisTitle(new AxisTitle("Time (minutes)"));
                 isaChart.getAxisY().setAxisTitle(new AxisTitle("ISA value"));
@@ -185,20 +192,22 @@ public class WorkspaceView extends JPanel implements MouseListener, Constants {
     }
 
     public void addIsaTrace(int tid) {
-        if (!isaTraces.containsKey(tid)) {
-                ITrace2D trace = new Trace2DLtd(100);
-                trace.setColor(chartColors[isaTraces.size()%10]);
-                if (server.getIsaTracePainter().equalsIgnoreCase("bar")) {
-                        trace.setTracePainter(new TracePainterVerticalBar(3, isaChart));
-                } else {
-                        trace.setStroke(new BasicStroke(1.5f));
-                }
-                trace.setName(terminalMap.get(tid).name);
+    	if (!isaTraces.containsKey(tid)) {
+    		ITrace2D trace = new Trace2DLtd(100);
+    		trace.setColor(chartColors[isaTraces.size()%10]);
+    		if (server.getIsaTracePainter().equalsIgnoreCase("bar")) {
+    			trace.setTracePainter(new TracePainterVerticalBar(3, isaChart));
+    		} else {
+    			trace.setStroke(new BasicStroke(1.5f));
+    		}
+    		trace.setName(terminalMap.get(tid).name);
 
-                // Add the trace to the chart:
-                isaChart.addTrace(trace);
-                isaTraces.put(tid, trace);
-        }
+    		// Add the trace to the chart:
+    		synchronized(getTreeLock()) {
+    			isaChart.addTrace(trace);
+    		}
+    		isaTraces.put(tid, trace);
+    	}
     }
 
     public void deselectTerminals() {
@@ -426,7 +435,9 @@ public class WorkspaceView extends JPanel implements MouseListener, Constants {
 
                 // Name of terminal and group
                 if (server.isaClient(t.tid)) {
-                        g.drawImage(indicatorIsa.getImage(), r.x+r.width-20, r.y+SERVERVIEW_TERMINAL_HEIGHT-26, null);
+                	g.drawImage(indicatorIsa.getImage(), r.x+r.width-20, r.y+SERVERVIEW_TERMINAL_HEIGHT-26, null);
+                } else if (server.autoIsaClient(t.tid) || server.pausedIsaClient(t.tid)) {
+                	g.drawImage(indicatorAutoIsa.getImage(), r.x+r.width-20, r.y+SERVERVIEW_TERMINAL_HEIGHT-26, null);                	
                 }
                 g.drawString(t.name + " " + t.groupName, r.x+4, r.y+r.height-4);
 

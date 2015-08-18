@@ -16,7 +16,7 @@ import com.lfv.lanzius.Constants;
  *
  * @author <a href="mailto:andreas@verido.se">Andreas Alptun</a>
  * @version Yada 2.0 (Lanzius)
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -52,6 +52,7 @@ public class TerminalProperties {
     private float   inputBufferSize;
     private float   signalVolumeAdjustment;
     private int     overPowerOtherStations;
+    private int     automaticISA;
 
     private String  multicastAddress;
     private int     multicastPort;
@@ -222,6 +223,10 @@ public class TerminalProperties {
 
     public int getOverPowerOtherStations() {
         return overPowerOtherStations;
+    }
+    
+    public int getAutomaticISA() {
+    	return automaticISA;
     }
 
     public void setUserInterfaceStyle(String userInterfaceStyle) {

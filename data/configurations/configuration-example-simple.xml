@@ -82,7 +82,7 @@
     </RoleDefs>
 
     <PlayerDefs>
-        <Player id="1">
+        <Player id="1" autoisa="1">
             <Name>P1</Name>
             <ChannelSetup>
                 <ChannelRef id="1"/>
@@ -92,7 +92,7 @@
                 <RoleRef id="1"/>
             </RoleSetup>
         </Player>
-        <Player id="2">
+        <Player id="2" autoisa="1">
             <Name>P2</Name>
             <ChannelSetup>
                 <ChannelRef id="1"/>

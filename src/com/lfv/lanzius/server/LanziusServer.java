@@ -156,6 +156,8 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
     private long isaStartTime;
     private String isaTracePainter = "line";
     private HashSet<Integer> isaClients;
+    private HashSet<Integer> autoIsaClients;
+    private HashSet<Integer> pausedIsaClients;
     private int isaPeriod;
     private int isaNumChoices = 6;
     private String[] isakeytext = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
@@ -170,6 +172,7 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
     public LanziusServer() {
         // Create a logger for the server
         log = LogFactory.getLog(getClass());
+        autoIsaClients = new HashSet<Integer>(); // autoIsaClients may be used before init() is performed
     }
 
     public void init() {
@@ -331,6 +334,7 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
                         log.error(e.getMessage());
                 }
                 isaClients = new HashSet<Integer>();
+                pausedIsaClients = new HashSet<Integer>();
     }
 
     private void groupRemoteControlListener(final int port) {
@@ -436,7 +440,7 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
         panel.repaint();
     }
 
-    private void updateTerminals(int terminalId, int groupId) {
+    private void updateTerminals(final int terminalId, int groupId) {
         if(doc==null) return;
         synchronized(doc) {
             // Go through all terminals
@@ -446,7 +450,7 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
 
                 // Send messages only if terminal is online
                 if(DomTools.getAttributeBoolean(et, "online", false, false)) {
-                    int tid = DomTools.getAttributeInt(et, "id", 0, true);
+                    final int tid = DomTools.getAttributeInt(et, "id", 0, true);
 
                     // Bother about this terminal?
                     if(terminalId==ALL||terminalId==tid) {
@@ -471,7 +475,26 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
                                 if(state.equals("started")) {
                                     // send start packet
                                     log.info("Sending start to terminal "+tid);
-                                    networkManager.sendSessionRequestStart(tid);                                    
+                                    networkManager.sendSessionRequestStart(tid);
+                                    //if (eps.getAttributeValue("autoisa").equals("1")) {                                    	
+                                    if (autoIsaClient(tid) || pausedIsaClient(tid)) {
+                                    	new Thread() {
+                                    		public synchronized void run() {
+                                    			int i = 0;
+                                    			ServerTerminal t = bundle.getTerminal(tid);
+                                    			while (!(t.isConnected() && t.isStarted()) && ++i < 5) {
+	                                    			try {
+														Thread.sleep(1000);
+													} catch (InterruptedException e) {
+														e.printStackTrace();
+													}
+                                    			}
+                                    			isaStartStop(tid);
+                                    			updateView();
+                                    		}
+                                    	}.start();
+                                    	pausedIsaClients.remove(tid);
+                                    }
                                 }
                                 else if(state.equals("stopped")) {
                                     // send stop packet
@@ -488,7 +511,7 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
                     }
                 }
             }
-        }
+        }        
     }
 
     private void setTerminalFlag(int terminalId, String flag, boolean value) {
@@ -762,6 +785,10 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
             Element ep = new Element("Player");
             ep.setAttribute("terminalid", String.valueOf(terminalId));
             ep.setAttribute("groupid", String.valueOf(groupId));
+            ep.setAttribute("autoisa", DomTools.getAttributeString(playerElementArray[0], "autoisa", "0", false));
+            if (ep.getAttributeValue("autoisa").equals("1")) {
+            	autoIsaClients.add(Integer.valueOf(terminalId));
+            }
             ep.setAttribute("relocated", String.valueOf(isRelocated));
 
             // Create merged name
@@ -1883,6 +1910,7 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
 
                 if(state.equals("stopped")) {
                     if(eg!=null) {
+                    	panel.resetIsaChart();
                         eg.setAttribute("state", "started");
                         updateTerminals(ALL, groupId);
                         updateView();
@@ -1959,7 +1987,7 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
                 String state = DomTools.getAttributeString(eg, "state", "stopped", false);
 
                 if(state.equals("started")) {
-                        isaStop(gid);
+                	isaStop(gid, true);
                     eg.setAttribute("state", "paused");
                     updateTerminals(ALL, gid);
                     updateView();
@@ -2085,7 +2113,7 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
             if(isConfigLoaded) {
                 if(serverStartedDate==null) {
                     menuChoiceServerStart();
-                        itemServerRestart.setEnabled(true);
+                    itemServerRestart.setEnabled(true);
                 } else
                     JOptionPane.showMessageDialog(frame,"The server is already started!","Info!",JOptionPane.INFORMATION_MESSAGE);
             }
@@ -2249,7 +2277,7 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
     }
 
     public boolean isaStartStop(final int terminalId) {
-                ServerTerminal t = bundle.getTerminal(terminalId);
+    	ServerTerminal t = bundle.getTerminal(terminalId);
         // Get linked player
         Element eps = DomTools.getElementFromSection(doc, "PlayerSetup", "terminalid", String.valueOf(terminalId));
         // Get group id
@@ -2274,6 +2302,10 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
     }
 
     private void isaStop(final int groupId) {
+    	isaStop(groupId, false);
+    }
+    
+    private void isaStop(final int groupId, boolean pause) {
         int terminalId;
         int terminalGid;
         Iterator<Integer> iter = isaClients.iterator();
@@ -2297,12 +2329,27 @@ public class LanziusServer implements ActionListener, ServerNetworkHandler, Serv
         }
         for (int i = 0; i < removeClients.size(); i++) {
                 isaClients.remove(removeClients.get(i));
+                if (pause) {
+                	pausedIsaClients.add(removeClients.get(i));
+                }
         }
     }
 
     public boolean isaClient(int terminalId) {
         return isaClients.contains(terminalId);
     }
+    
+    public Iterator<Integer> isaClientsIterator() {
+    	return isaClients.iterator();
+    }
+    
+    public boolean autoIsaClient(int terminalId) {
+        return autoIsaClients.contains(terminalId);
+    }
+    
+    public boolean pausedIsaClient(int terminalId) {
+        return pausedIsaClients.contains(terminalId);
+    }    
 
     public String getIsaTracePainter() {
         return isaTracePainter;

@@ -643,8 +643,14 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
         try {
             properties = new TerminalProperties(id);
         } catch (Exception ex) {
-            log.error("Invalid or no terminal properties file (data/properties/terminalproperties.xml). Exiting!",ex);
-            System.exit(0);
+            try {
+            	log.error("Invalid or no terminal properties file!",ex);
+            	log.info("Using default file (data/properties/terminalproperties.xml).");
+				properties = new TerminalProperties(0);
+			} catch (IOException e) {
+				log.error("Invalid or no terminal properties file (data/properties/terminalproperties.xml). Exiting!",ex);
+				System.exit(0);
+			}
         }
 
         // Overwrite if specified externally on the command line

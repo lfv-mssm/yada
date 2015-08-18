@@ -28,7 +28,7 @@ import org.jdom.Element;
  *
  * @author <a href="mailto:andreas@verido.se">Andreas Alptun</a>
  * @version Yada 2 (Lanzius)
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
@@ -429,22 +429,29 @@ public class WorkspacePanel extends JPanel implements ActionListener {
         }
 
         else if(button==buttonIsaStart) {
-                view.initIsaChart();
-                if (selectionList != null) {
-                        Iterator<Integer> i = selectionList.iterator();
-                        int tid;
-                        while (i.hasNext()) {
-                                tid = i.next().intValue();
-                                if (server.isaClient(tid)) {
-                                        //view.removeIsaTrace(tid);
-                                        server.isaStartStop(tid);
-                                } else if (server.isaStartStop(tid)) {
-                                        view.addIsaTrace(tid);
-                                }
-                        }
-                        updateButtons(false, null);
-                        repaint();
-                }
+        	view.initIsaChart();
+        	if (selectionList == null) {
+        		Iterator<Integer> i = server.isaClientsIterator();
+        		int tid;
+        		while (i.hasNext()) {
+        			tid = i.next().intValue();
+        			view.addIsaTrace(tid);
+        		}
+        	} else {
+        		Iterator<Integer> i = selectionList.iterator();
+        		int tid;
+        		while (i.hasNext()) {
+        			tid = i.next().intValue();
+        			if (server.isaClient(tid)) {
+        				//view.removeIsaTrace(tid);
+        				server.isaStartStop(tid);
+        			} else if (server.isaStartStop(tid)) {
+        				view.addIsaTrace(tid);
+        			}
+        		}
+        		updateButtons(false, null);
+        		repaint();
+        	}
         }
     }
 
