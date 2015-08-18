@@ -1978,8 +1978,16 @@ public class Controller implements ViewEventHandler, ClientNetworkHandler, Audio
         clipWarning.close();
         clipNotify.close();
         SoundClip.closeCommonTimer();
-        outputMixer.close();
-        inputMixer.close();
+        try {
+        	outputMixer.close();
+        } catch (java.lang.IllegalStateException e) {
+        	log.error(e);
+        }
+        try {
+        	inputMixer.close();
+        } catch (java.lang.IllegalStateException e) {
+        	log.error(e);
+        }
         volumeClipList.clear();
 
         state = CLIENT_STATE_UNINITIALIZED;
